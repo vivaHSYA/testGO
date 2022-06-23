@@ -12,6 +12,5 @@ func main(){
 	result := account.NewAccount("jiwan");
 	
 	fmt.Println(result);
-	
 
 }
