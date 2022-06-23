@@ -3,11 +3,19 @@ package main
 import "fmt"
 
 
+type person struct{
+	name string 
+	age int
+	favFood []string
+}
+
 func main(){
 	// const name string = "hello";
 
-	names := [5]string{"1","2","3","4","5"}
-	names[3] = "ala"
-	fmt.Println(names)
+
+	favFood := []string{"test1","test2"}
+	test := person{"jiwan",18,favFood}
+	fmt.Println(test);
+	
 
 }
