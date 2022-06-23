@@ -6,12 +6,45 @@ import (
 	"net/http"
 )
 
+// func main(){
+// 	c := make(chan string)
+// 	people := [2]string{"jiwan","test"}
+
+// 	for _,person := range people{
+// 		go testCount(person,c)
+// 	}
+
+// 	for i:=0;i<len(people);i++{
+
+// 		fmt.Println(<-c)
+// 	}
+
+// 	fmt.Println("waiting");
+
+// }
+
+// func testCount(word string, c chan string){
+// 	time.Sleep(time.Second * 5)
+// 	c <- word + " is finished"
+// }
+
+
 
 var errRequestFailed = errors.New("req is failed");
 
+type result struct{
+	url string
+	flag string
+}
+
 func main(){
+
 	
-	var results = make(map[string]string)
+	results := make(map[string]string)
+
+	c := make(chan result)
+	
+	
 
 	urls := []string{
 		"https://www.airbnb.com/",
@@ -28,24 +61,31 @@ func main(){
 	// result := map[string]string
 
 	for _,url := range urls {
-		result := "OK"
-		err := hitURL(url)
-		if err != nil{
-			result = "FAILED"
-		}
-		results[url] = result
+		
+		go hitURL(url,c)
+		
 	}
-	for url, result := range results{
-		fmt.Println(url, result)
+
+	for i := 0;i<len(urls);i++{
+		reqResult := <-c
+		results[reqResult.url] = reqResult.flag
+	}
+	
+	for url,status := range results{
+		fmt.Println(url, " is ",status)
 	}
 	
 }
 
-func hitURL(url string) error {
-	fmt.Println("checking : ",url)
+func hitURL(url string, c chan<- result) {
+	
 	resp, err := http.Get(url)
+	status := "OK"
+	
 	if err != nil || resp.StatusCode >= 400{
-		return errRequestFailed
+		status = "FAILED"
 	}
-	return nil
+
+	c <- result{url:url, flag:status}
+	
 }
