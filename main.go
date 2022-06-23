@@ -1,21 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-
-type person struct{
-	name string 
-	age int
-	favFood []string
-}
+	"github.com/vivaHSYA/learngo/account"
+)
 
 func main(){
 	// const name string = "hello";
 
-
-	favFood := []string{"test1","test2"}
-	test := person{"jiwan",18,favFood}
-	fmt.Println(test);
+	result := account.NewAccount("jiwan");
+	
+	fmt.Println(result);
 	
 
 }
